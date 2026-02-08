@@ -1,6 +1,6 @@
 streamlit==1.32.0
 google-generativeai==0.3.2
-ortools==9.8.3296
+ortools==9.12.4544
 networkx==3.2.1
 pydantic==2.6.1
 pandas==2.2.0
