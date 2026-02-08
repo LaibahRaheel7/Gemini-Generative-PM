@@ -40,7 +40,7 @@ wheels/
 Thumbs.db
 
 # Node (frontend component)
-components/frontend/node_modules/
+# components/frontend/node_modules/
 
 # Project specific
 state.json.backup
