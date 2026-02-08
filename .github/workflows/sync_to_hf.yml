@@ -14,6 +14,7 @@ jobs:
         with:
           fetch-depth: 0
           lfs: true # Set to true if you have large files
+          # minor change
       - name: Push to hub
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
