@@ -1,5 +1,5 @@
 ---
-title: Gemini Advanced PM
+title: Gemini Generative PM
 emoji: 🚀
 colorFrom: blue
 colorTo: indigo

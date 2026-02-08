@@ -19,4 +19,4 @@ jobs:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           # Replace 'laibahraheel7' and 'Gemini-PM' with your actual username and space name
-          git push --force https://laibahraheel7:$HF_TOKEN@huggingface.co/spaces/laibahraheel7/Gemini-Advanced-PM main
+          git push --force https://laibahraheel7:$HF_TOKEN@huggingface.co/spaces/laibahraheel7/Gemini-Generative-PM main
