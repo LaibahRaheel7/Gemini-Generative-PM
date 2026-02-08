@@ -116,6 +116,10 @@ streamlit run app.py
 
 The app will open in your browser at `http://localhost:8501`
 
+### Deploying to Hugging Face Spaces
+
+The repo is set up for fast builds on Spaces. Keep the README frontmatter in sync with `requirements.txt`: **`sdk_version`** (e.g. `1.32.0`) must match the **`streamlit`** version in `requirements.txt`. Dependencies are pinned to versions with pre-built wheels to avoid slow compilation.
+
 ## 📖 How to Use
 
 ### Step 1: Add Team Members
