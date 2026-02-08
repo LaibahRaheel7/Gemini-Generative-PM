@@ -1,0 +1,84 @@
+{
+  "tasks": [
+    {
+      "id": "T1",
+      "name": "Project Setup & Requirements Gathering",
+      "duration_hours": 8,
+      "dependencies": [],
+      "assigned_to": "R1",
+      "priority": 1
+    },
+    {
+      "id": "T2",
+      "name": "Database Schema Design",
+      "duration_hours": 16,
+      "dependencies": ["T1"],
+      "assigned_to": "R2",
+      "priority": 1
+    },
+    {
+      "id": "T3",
+      "name": "API Endpoint Development",
+      "duration_hours": 32,
+      "dependencies": ["T2"],
+      "assigned_to": "R2",
+      "priority": 1
+    },
+    {
+      "id": "T4",
+      "name": "Frontend Component Library",
+      "duration_hours": 24,
+      "dependencies": ["T1"],
+      "assigned_to": "R3",
+      "priority": 1
+    },
+    {
+      "id": "T5",
+      "name": "UI Integration with API",
+      "duration_hours": 24,
+      "dependencies": ["T3", "T4"],
+      "assigned_to": "R3",
+      "priority": 1
+    },
+    {
+      "id": "T6",
+      "name": "Testing & QA",
+      "duration_hours": 16,
+      "dependencies": ["T5"],
+      "assigned_to": "R1",
+      "priority": 1
+    },
+    {
+      "id": "T7",
+      "name": "Deployment & DevOps Setup",
+      "duration_hours": 16,
+      "dependencies": ["T6"],
+      "assigned_to": "R4",
+      "priority": 1
+    }
+  ],
+  "resources": [
+    {
+      "id": "R1",
+      "name": "Alice Johnson",
+      "role": "Full-Stack"
+    },
+    {
+      "id": "R2",
+      "name": "Bob Smith",
+      "role": "Backend"
+    },
+    {
+      "id": "R3",
+      "name": "Carol Williams",
+      "role": "Frontend"
+    },
+    {
+      "id": "R4",
+      "name": "David Brown",
+      "role": "DevOps"
+    }
+  ],
+  "project_start_date": "2024-03-04",
+  "schedule": []
+}
