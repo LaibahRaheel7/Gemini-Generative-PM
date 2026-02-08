@@ -26,7 +26,17 @@ from utils.user_state import get_user_id, get_state_path, is_logged_in_via_provi
 
 # Load environment variables
 load_dotenv()
-api_key = os.getenv("GEMINI_API_KEY", "")
+_env_api_key = os.getenv("GEMINI_API_KEY", "")
+if not _env_api_key:
+    try:
+        _env_api_key = str(st.secrets.get("GEMINI_API_KEY", "") or getattr(st.secrets, "GEMINI_API_KEY", ""))
+    except Exception:
+        pass
+
+
+def get_api_key() -> str:
+    """API key from Space secrets/env or sidebar input (so Parse with AI works when no secret is set)."""
+    return _env_api_key or st.session_state.get("gemini_api_key_input", "")
 
 # Page configuration
 st.set_page_config(
@@ -234,6 +244,15 @@ with st.sidebar:
     else:
         st.caption(f"👤 Session workspace")
     st.divider()
+    # Gemini API key: from env/secrets or paste in sidebar (used for Parse with AI, chat, PDF extract)
+    st.text_input(
+        "Gemini API key",
+        type="password",
+        key="gemini_api_key_input",
+        placeholder="Paste key here (or set GEMINI_API_KEY in Space secrets)" if not _env_api_key else "Using key from environment",
+        help="Get one at makersuite.google.com/app/apikey. Optional if set in env/secrets.",
+    )
+    st.divider()
     st.header("⚙️ Configuration")
     
     # Project Start Date (uses first project when in multi-project mode)
@@ -393,14 +412,14 @@ with tab1:
     
     # PDF upload
     uploaded_file = st.file_uploader("Upload PDF project brief", type=["pdf"], key="pdf_brief")
-    if uploaded_file and api_key:
+    if uploaded_file and get_api_key():
         if st.button("📄 Extract from PDF (Gemini 2.5 Pro)", key="extract_pdf"):
             with st.spinner("Extracting structured data from PDF..."):
                 try:
                     from core.document_parser import get_document_parser
                     parser = get_document_parser()
                     pdf_text = parser.extract_text_from_bytes(uploaded_file.getvalue(), uploaded_file.name)
-                    brain = GeminiBrain(api_key)
+                    brain = GeminiBrain(get_api_key())
                     brief = brain.extract_project_brief(pdf_text)
                     st.session_state["extracted_brief"] = brief
                     st.success(f"Extracted: {len(brief.get('tasks', []))} tasks, deadline: {brief.get('project_deadline', 'N/A')}")
@@ -444,15 +463,15 @@ with tab1:
     
     col1, col2 = st.columns([1, 1])
     with col1:
-        if st.button("🧠 Parse with AI", type="primary", disabled=not api_key):
-            if not api_key:
-                st.error("Please enter your Gemini API key in the sidebar")
+        if st.button("🧠 Parse with AI", type="primary", disabled=not get_api_key()):
+            if not get_api_key():
+                st.error("Add your Gemini API key in the sidebar (or set GEMINI_API_KEY in Space secrets)")
             elif not st.session_state.state.resources:
                 st.error("Please add team members first")
             else:
                 with st.spinner("Analyzing requirements with Gemini..."):
                     try:
-                        brain = GeminiBrain(api_key)
+                        brain = GeminiBrain(get_api_key())
                         tasks = brain.parse_requirements(requirements, st.session_state.state.resources)
                         st.session_state.state.tasks = tasks
                         save_state()
@@ -583,11 +602,11 @@ with tab2:
         st.dataframe(df, use_container_width=True)
         
         # AI Summary
-        if api_key:
+        if get_api_key():
             if st.button("🤖 Generate AI Summary"):
                 with st.spinner("Generating summary..."):
                     try:
-                        brain = GeminiBrain(api_key)
+                        brain = GeminiBrain(get_api_key())
                         summary = brain.generate_summary([task.model_dump() for task in st.session_state.state.schedule])
                         st.info(summary)
                     except Exception as e:
@@ -641,13 +660,13 @@ with tab4:
         # Add user message
         st.session_state.chat_history.append({"role": "user", "content": user_input})
         
-        if not api_key:
-            response = "Please enter your Gemini API key in the sidebar to use the chat feature."
+        if not get_api_key():
+            response = "Add your Gemini API key in the sidebar to use the chat feature."
             st.session_state.chat_history.append({"role": "assistant", "content": response})
         else:
             with st.spinner("Thinking..."):
                 try:
-                    brain = GeminiBrain(api_key)
+                    brain = GeminiBrain(get_api_key())
                     action = brain.interpret_chat(
                         user_input,
                         st.session_state.state.model_dump()
