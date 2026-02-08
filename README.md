@@ -1,3 +1,17 @@
+---
+title: Gemini Advanced PM
+emoji: 🚀
+colorFrom: blue
+colorTo: indigo
+sdk: streamlit
+sdk_version: 1.31.0
+app_file: app.py
+pinned: false
+---
+
+# Gemini Advanced PM
+Your project description goes here.
+
 # 🤖 Gemini PM - AI-Powered Project Manager
 
 An autonomous Project Management agent that uses **Neuro-Symbolic AI** architecture: combining Google Gemini (AI reasoning) with Google OR-Tools (mathematical optimization) to intelligently parse requirements and optimally schedule tasks.
