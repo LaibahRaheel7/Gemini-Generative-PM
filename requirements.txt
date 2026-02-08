@@ -1,15 +1,9 @@
-# Optimized for Hugging Face Spaces (Debian, CPU). All pins have pre-built wheels to avoid compilation.
-# Keep sdk_version in README.md frontmatter in sync with streamlit version below.
-
 streamlit==1.32.0
-# Constrain protobuf so google-generativeai resolves quickly (avoids resolver hang)
-protobuf>=3.20,<4
 google-generativeai==0.4.1
-# ortools 9.8 has no Python 3.13 wheel; 9.12+ does (no C++ compile)
-ortools==9.12.4544
+ortools==9.8.3296
 networkx==3.2.1
 pydantic==2.6.1
-pandas==2.2.0
+pandas==2.2.1
 plotly==5.18.0
 python-dotenv==1.0.1
 holidays==0.40
