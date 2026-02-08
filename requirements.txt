@@ -1,9 +1,9 @@
 streamlit==1.32.0
-google-generativeai==0.3.2
-ortools==9.12.4544
+google-generativeai==0.4.1
+ortools==9.8.3296
 networkx==3.2.1
 pydantic==2.6.1
-pandas==2.2.0
+pandas==2.2.1
 plotly==5.18.0
 python-dotenv==1.0.1
 holidays==0.40
