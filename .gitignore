@@ -43,5 +43,7 @@ Thumbs.db
 components/frontend/node_modules/
 
 # Project specific
+state.json
 state.json.backup
+user_data/
 *.log

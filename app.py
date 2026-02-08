@@ -22,6 +22,7 @@ from core.brain import GeminiBrain
 from core.leave_manager import LeaveManager
 from core.shift_optimizer import ShiftOptimizer
 from utils.time_utils import format_duration
+from utils.user_state import get_user_id, get_state_path, is_logged_in_via_provider
 
 # Load environment variables
 load_dotenv()
@@ -34,30 +35,33 @@ st.set_page_config(
     layout="wide"
 )
 
-# Initialize session state with migration support
+# Initialize session state: per-user file (user_data/state_{user_id}.json) or empty
 if 'state' not in st.session_state:
-    with open('state.json', 'r') as f:
-        data = json.load(f)
-        
-        # Check if it's old format (ProjectState) or new format (MultiProjectState)
+    state_path = get_state_path()
+    if os.path.isfile(state_path):
+        with open(state_path, 'r') as f:
+            data = json.load(f)
         if 'projects' not in data:
-            # Old format - migrate it
             old_state = ProjectState(**data)
             st.session_state.state = migrate_project_state_to_multi(old_state)
-            # Save migrated state
-            with open('state.json', 'w') as fw:
+            with open(state_path, 'w') as fw:
                 json.dump(st.session_state.state.model_dump(), fw, indent=2)
             st.success("✅ State migrated to multi-project format!")
         else:
-            # New format - load directly
             st.session_state.state = MultiProjectState(**data)
+    else:
+        st.session_state.state = MultiProjectState(
+            projects=[], tasks=[], resources=[], schedule=[], leaves=[], reduced_capacities=[]
+        )
 
 if 'chat_history' not in st.session_state:
     st.session_state.chat_history = []
 
 def save_state():
-    """Save the current state to state.json"""
-    with open('state.json', 'w') as f:
+    """Save the current state to the logged-in user's file."""
+    state_path = get_state_path()
+    os.makedirs(os.path.dirname(state_path), exist_ok=True)
+    with open(state_path, 'w') as f:
         json.dump(st.session_state.state.model_dump(), f, indent=2)
 
 
@@ -223,6 +227,13 @@ st.markdown("*Neuro-Symbolic Project Management: AI + Math*")
 
 # Sidebar - Configuration
 with st.sidebar:
+    # Per-user workspace indicator
+    user_id = get_user_id()
+    if is_logged_in_via_provider():
+        st.caption(f"👤 **{user_id}**")
+    else:
+        st.caption(f"👤 Session workspace")
+    st.divider()
     st.header("⚙️ Configuration")
     
     # Project Start Date (uses first project when in multi-project mode)
