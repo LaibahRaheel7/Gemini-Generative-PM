@@ -31,14 +31,9 @@ st.set_page_config(
     layout="wide"
 )
 
-# Load environment variables and secrets (after set_page_config)
+# Load environment variables (after set_page_config). On HF Spaces, set GEMINI_API_KEY in Variables and secrets.
 load_dotenv()
 _env_api_key = os.getenv("GEMINI_API_KEY", "")
-if not _env_api_key:
-    try:
-        _env_api_key = str(st.secrets.get("GEMINI_API_KEY", "") or getattr(st.secrets, "GEMINI_API_KEY", ""))
-    except Exception:
-        pass
 
 
 def get_api_key() -> str:
