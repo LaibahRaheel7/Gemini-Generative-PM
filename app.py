@@ -22,7 +22,7 @@ from core.brain import GeminiBrain
 from core.leave_manager import LeaveManager
 from core.shift_optimizer import ShiftOptimizer
 from utils.time_utils import format_duration
-from utils.user_state import get_user_id, get_state_path, is_logged_in_via_provider
+from utils.user_state import get_state_path
 
 # Load environment variables
 load_dotenv()
@@ -237,12 +237,6 @@ st.markdown("*Neuro-Symbolic Project Management: AI + Math*")
 
 # Sidebar - Configuration
 with st.sidebar:
-    # Per-user workspace indicator
-    user_id = get_user_id()
-    if is_logged_in_via_provider():
-        st.caption(f"👤 **{user_id}**")
-    else:
-        st.caption(f"👤 Session workspace")
     st.divider()
     # Gemini API key: from env/secrets or paste in sidebar (used for Parse with AI, chat, PDF extract)
     st.text_input(
