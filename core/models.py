@@ -50,6 +50,7 @@ class Task(BaseModel):
     required_skillset: Optional[str] = Field(None, description="Required skillset from brief (e.g. 'Backend', 'DevOps')")
     status_note: Optional[str] = Field(None, description="User suggestion/status (e.g. 'Dependency on client')")
     health: Literal["on_track", "at_risk", "blocked"] = Field("on_track", description="Visual indicator for timeline")
+    feature: Optional[str] = Field(None, description="Feature/portal/section this task belongs to (for breakdown view)")
 
 class ScheduledTask(BaseModel):
     """Represents a task with computed start and end times."""

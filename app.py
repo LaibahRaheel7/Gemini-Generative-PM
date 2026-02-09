@@ -402,7 +402,7 @@ with tab1:
     # PDF upload
     uploaded_file = st.file_uploader("Upload PDF project brief", type=["pdf"], key="pdf_brief")
     if uploaded_file and get_api_key():
-        if st.button("📄 Extract from PDF (Gemini 2.5 Pro)", key="extract_pdf"):
+        if st.button("📄 Extract from PDF (Gemini 3 Pro)", key="extract_pdf"):
             with st.spinner("Extracting structured data from PDF..."):
                 try:
                     from core.document_parser import get_document_parser
@@ -429,12 +429,13 @@ with tab1:
                         id=tid,
                         name=t.get("name", "Task"),
                         duration_hours=int(t.get("estimated_hours", 8)),
-                        dependencies=[],  # could resolve by name if needed
+                        dependencies=[],
                         assigned_to=None,
                         priority=priority_map.get(t.get("priority", "Medium"), 2),
                         project_id=st.session_state.state.projects[0].id if st.session_state.state.projects else "P1",
                         complexity="medium",
                         required_skillset=t.get("required_skillset"),
+                        feature=t.get("feature"),
                     ))
                 st.session_state.state.tasks = tasks_from_brief
                 if brief.get("project_deadline") and st.session_state.state.projects:
@@ -461,10 +462,18 @@ with tab1:
                 with st.spinner("Analyzing requirements with Gemini..."):
                     try:
                         brain = GeminiBrain(get_api_key())
-                        tasks = brain.parse_requirements(requirements, st.session_state.state.resources)
+                        data = brain.parse_requirements(requirements, st.session_state.state.resources)
+                        st.session_state["parsed_strategy"] = data.get("strategy", {})
+                        st.session_state["parsed_feature_breakdown"] = data.get("feature_breakdown", [])
+                        task_dicts = data.get("tasks", [])
+                        project_id = st.session_state.state.projects[0].id if st.session_state.state.projects else "P1"
+                        tasks = []
+                        for t in task_dicts:
+                            t_copy = {k: v for k, v in t.items() if k in Task.model_fields}
+                            tasks.append(Task(project_id=project_id, **t_copy))
                         st.session_state.state.tasks = tasks
                         save_state()
-                        st.success(f"✅ Parsed {len(tasks)} tasks!")
+                        st.success(f"✅ Parsed {len(tasks)} tasks with feature breakdown!")
                         st.rerun()
                     except Exception as e:
                         st.error(f"Parsing failed: {str(e)}")
@@ -473,16 +482,44 @@ with tab1:
             generate_schedule()
             st.rerun()
     
+    # Show PM strategy and feature-based timeline when available
+    if st.session_state.state.tasks and (st.session_state.get("parsed_strategy") or st.session_state.get("parsed_feature_breakdown")):
+        strategy = st.session_state.get("parsed_strategy") or {}
+        breakdown = st.session_state.get("parsed_feature_breakdown") or []
+        with st.expander("📊 Project breakdown (feature-based timeline)", expanded=True):
+            if strategy.get("approach") or strategy.get("summary"):
+                st.markdown("**Delivery approach**")
+                st.caption(strategy.get("summary", ""))
+                st.write(strategy.get("rationale", ""))
+                st.divider()
+            if breakdown:
+                st.markdown("**Time by feature / section**")
+                for item in sorted(breakdown, key=lambda x: x.get("order", 0)):
+                    name = item.get("feature_name", "—")
+                    hours = item.get("total_hours", 0)
+                    phase = item.get("phase", "")
+                    desc = item.get("description", "")
+                    task_ids = item.get("task_ids", [])
+                    st.markdown(f"**{name}** — {format_duration(hours)}" + (f" — *{phase}*" if phase else ""))
+                    if desc:
+                        st.caption(desc)
+                    if task_ids:
+                        st.caption(f"Tasks: {', '.join(task_ids)}")
+                st.divider()
     if st.session_state.state.tasks:
         st.subheader("Parsed Tasks")
         for task in st.session_state.state.tasks:
-            with st.expander(f"{task.id}: {task.name}"):
+            feat = getattr(task, "feature", None)
+            title = f"{task.id}: {task.name}" + (f" — *{feat}*" if feat else "")
+            with st.expander(title):
                 st.write(f"**Duration:** {format_duration(task.duration_hours)}")
                 st.write(f"**Assigned to:** {task.assigned_to or 'Unassigned'}")
                 st.write(f"**Dependencies:** {', '.join(task.dependencies) if task.dependencies else 'None'}")
                 st.write(f"**Priority:** {task.priority}")
                 if getattr(task, "required_skillset", None):
                     st.write(f"**Skillset:** {task.required_skillset}")
+                if feat:
+                    st.write(f"**Feature:** {feat}")
 
 # Tab 2: Schedule Visualization
 with tab2:

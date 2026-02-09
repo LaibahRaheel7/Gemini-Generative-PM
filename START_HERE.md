@@ -233,10 +233,10 @@ self.work_end_hour = 17    # Change to 18 for 6 PM
 File: `core/brain.py`, Line 14
 ```python
 # For faster parsing (less accurate)
-self.parser_model = genai.GenerativeModel('gemini-1.5-flash-latest')
+self.parser_model = genai.GenerativeModel('gemini-3-flash-preview')
 
 # For best quality (slower)
-self.parser_model = genai.GenerativeModel('gemini-1.5-pro-latest')
+self.parser_model = genai.GenerativeModel('gemini-3-pro-preview')
 ```
 
 ### Modify Solver Timeout

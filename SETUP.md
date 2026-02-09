@@ -301,10 +301,10 @@ solver.parameters.max_time_in_seconds = 30.0  # Increase for complex projects
 Edit `core/brain.py`:
 ```python
 # For faster (less accurate) parsing
-self.parser_model = genai.GenerativeModel('gemini-1.5-flash-latest')
+self.parser_model = genai.GenerativeModel('gemini-3-flash-preview')
 
 # For highest quality
-self.parser_model = genai.GenerativeModel('gemini-1.5-pro-latest')
+self.parser_model = genai.GenerativeModel('gemini-3-pro-preview')
 ```
 
 ---
