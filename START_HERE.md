@@ -277,7 +277,7 @@ pip install -r requirements.txt --upgrade
 
 ### Technology Stack
 - **Frontend:** Streamlit (Python web framework)
-- **AI:** Google Gemini 1.5 (Pro + Flash)
+- **AI:** Google Gemini 3 (Pro + Flash)
 - **Solver:** Google OR-Tools (CP-SAT)
 - **Data:** Pydantic (validation) + JSON (storage)
 - **Graphs:** NetworkX (dependency validation)

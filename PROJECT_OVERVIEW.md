@@ -109,7 +109,7 @@ Timeline: 4 weeks
            │
            ▼
 ┌─────────────────────┐
-│   Gemini 1.5 Pro    │  Understands requirements,
+│   Gemini 3 Pro      │  Understands requirements,
 │   (AI Brain)        │  extracts tasks, estimates
 └──────────┬──────────┘
            │

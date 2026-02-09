@@ -126,8 +126,8 @@ Gemini PM requires a Google Gemini API key to function.
 
 ### Free Tier Limits:
 
-- Gemini 1.5 Flash: 15 requests per minute, 1 million tokens per day
-- Gemini 1.5 Pro: 2 requests per minute, 32,000 tokens per day
+- Gemini 3 Flash: 15 requests per minute, 1 million tokens per day
+- Gemini 3 Pro: 2 requests per minute, 32,000 tokens per day
 
 For most project management use cases, the free tier is sufficient.
 

@@ -815,4 +815,4 @@ with tab5:
 
 # Footer
 st.divider()
-st.caption("Powered by Google Gemini 1.5 + OR-Tools | Neuro-Symbolic AI Architecture")
+st.caption("Powered by Google Gemini 3 + OR-Tools | Neuro-Symbolic AI Architecture")

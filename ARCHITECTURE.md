@@ -25,15 +25,15 @@ This hybrid approach ensures both flexibility (understand messy requirements) an
 ┌────────────────────────────────┐  ┌─────────────────────────┐
 │       AI BRAIN (brain.py)      │  │  STATE MANAGEMENT       │
 │                                │  │  (state.json)           │
-│  ┌──────────────────────────┐ │  │                         │
-│  │  Gemini 1.5 Pro          │ │  │  • Tasks                │
-│  │  (Requirement Parsing)   │ │  │  • Resources            │
-│  └──────────────────────────┘ │  │  • Schedule             │
+│  ┌──────────────────────────┐  │  │                         │
+│  │  Gemini 3 Pro            │  │  │  • Tasks                │
+│  │  (Requirement Parsing)   │  │  │  • Resources            │
+│  └──────────────────────────┘  │  │  • Schedule             │
 │                                │  │  • Project Settings     │
-│  ┌──────────────────────────┐ │  │                         │
-│  │  Gemini 1.5 Flash        │ │  └─────────────────────────┘
-│  │  (Chat & Updates)        │ │
-│  └──────────────────────────┘ │
+│  ┌──────────────────────────┐  │  │                         │
+│  │  Gemini 3 Flash          │  │  └─────────────────────────┘
+│  │  (Chat & Updates)        │  │
+│  └──────────────────────────┘  │
 │                                │
 │  Converts Natural Language     │
 │  to Structured Data (JSON)     │
@@ -95,7 +95,7 @@ This hybrid approach ensures both flexibility (understand messy requirements) an
 User Input (Text)
     │
     ▼
-Gemini 1.5 Pro
+Gemini 3 Pro
     │
     ▼
 Prompt Engineering
@@ -154,7 +154,7 @@ Gantt Chart Visualization
 User Message (Natural Language)
     │
     ▼
-Gemini 1.5 Flash
+Gemini 3 Flash
     │
     ▼
 Intent Classification
@@ -196,17 +196,17 @@ Updated UI
 
 **Methods:**
 - `parse_requirements(text, resources)` → Task[]
-  - Uses Gemini 1.5 Pro
+  - Uses Gemini 3 Pro
   - Prompt engineered for JSON extraction
   - Handles task breakdown, dependency inference
   
 - `interpret_chat(message, state)` → Action
-  - Uses Gemini 1.5 Flash
+  - Uses Gemini 3 Flash
   - Returns structured action object
   - Supports add/update/delete operations
   
 - `generate_summary(schedule)` → str
-  - Uses Gemini 1.5 Flash
+  - Uses Gemini 3 Flash
   - Creates executive summary
 
 **Prompt Engineering:**
@@ -404,8 +404,8 @@ def _project_business_hours(self, hour_offset: int) -> datetime:
 
 ### Gemini API Latency
 
-- **Parsing:** 5-15 seconds (Gemini 1.5 Pro)
-- **Chat:** 1-3 seconds (Gemini 1.5 Flash)
+- **Parsing:** 5-15 seconds (Gemini 3 Pro)
+- **Chat:** 1-3 seconds (Gemini 3 Flash)
 - **Rate limits:** 2 RPM (Pro), 15 RPM (Flash)
 
 ### Scaling Considerations
