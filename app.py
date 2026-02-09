@@ -24,7 +24,14 @@ from core.shift_optimizer import ShiftOptimizer
 from utils.time_utils import format_duration
 from utils.user_state import get_state_path
 
-# Load environment variables
+# Page configuration must be the first Streamlit command (no st.* or st.secrets before this)
+st.set_page_config(
+    page_title="Gemini PM - AI Project Manager",
+    page_icon="🤖",
+    layout="wide"
+)
+
+# Load environment variables and secrets (after set_page_config)
 load_dotenv()
 _env_api_key = os.getenv("GEMINI_API_KEY", "")
 if not _env_api_key:
@@ -37,13 +44,6 @@ if not _env_api_key:
 def get_api_key() -> str:
     """API key from Space secrets/env or sidebar input (so Parse with AI works when no secret is set)."""
     return _env_api_key or st.session_state.get("gemini_api_key_input", "")
-
-# Page configuration
-st.set_page_config(
-    page_title="Gemini PM - AI Project Manager",
-    page_icon="🤖",
-    layout="wide"
-)
 
 # Initialize session state: per-user file (user_data/state_{user_id}.json) or empty
 if 'state' not in st.session_state:
