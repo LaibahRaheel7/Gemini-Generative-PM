@@ -19,7 +19,7 @@ An autonomous Project Management agent that uses **Neuro-Symbolic AI** architect
 
 Unlike typical AI tools that just generate text, Gemini PM uses a **hybrid approach**:
 
-- **The Brain (AI)**: Gemini 1.5 understands messy, unstructured requirements
+- **The Brain (AI)**: Gemini 3 understands messy, unstructured requirements
 - **The Hands (Math)**: OR-Tools creates mathematically optimal schedules that respect real-world constraints
 
 This separation ensures you get:
@@ -27,6 +27,18 @@ This separation ensures you get:
 - ✅ Weekend-aware timelines (automatically skips Sat/Sun)
 - ✅ Resource conflict resolution (no person does two things at once)
 - ✅ Dependency validation (circular dependencies detected)
+
+## Gemini 3 Integration (Submission requirement)
+
+This application is built with the **Gemini 3 API** and uses it as the core intelligence layer. **Which Gemini 3 features are used:** We use the Gemini 3 Flash model (`gemini-3-flash-preview`) via the Google Generative AI Python SDK for four central flows. (1) **Requirement parsing:** Unstructured project descriptions or pasted text are sent to Gemini 3; the model returns structured JSON (tasks, dependencies, assignments, feature breakdown, and a PM-style delivery strategy (portal-first vs feature-first) with rationale). (2) **PDF brief extraction:** Uploaded project briefs (PDF) are converted to text and sent to Gemini 3, which extracts features, tasks, estimates, and deadlines using developer-reality rules (6h effective day, buffers). (3) **Natural language chat:** User messages (e.g. “Add a task for API testing”, “John is off tomorrow”) are interpreted by Gemini 3 into structured actions (add_task, update_task, remove_task, add_resource) so the app can update state and reschedule. (4) **Schedule summary:** Gemini 3 generates a short executive summary of the computed schedule. **How it is central:** Without Gemini 3, the app would not parse free text, read PDFs, or handle chat; the scheduler (OR-Tools) would have no structured input. Gemini 3 is the only AI/LLM in the stack and is required for the product to function as designed.
+
+## Third-party integrations
+
+- **Google Gemini 3 API** (Generative AI): core AI; used under Google’s API terms.
+- **Streamlit**: UI framework; Apache 2.0.
+- **Hugging Face Spaces** (optional): deployment host; used per HF Terms of Service.
+- **Google OR-Tools**: constraint solver for scheduling; Apache 2.0.
+- **Pydantic, Pandas, Plotly, NetworkX, python-dotenv, PyPDF2, python-docx, holidays**: libraries for data, viz, and PDF/text handling; used under their respective licenses. No other third-party SDKs or paid services are required.
 
 ## 🏗️ Architecture
 
@@ -38,7 +50,7 @@ This separation ensures you get:
            │
            ▼
 ┌─────────────────────┐
-│  Gemini 1.5 Pro     │  ◄── Parsing & Understanding
+│  Gemini 3           │  ◄── Parsing & Understanding
 │  (brain.py)         │
 └──────────┬──────────┘
            │
@@ -240,8 +252,7 @@ Challenge: How do you schedule "40 hours of work" realistically?
 
 ### Models Used
 
-- **Gemini 1.5 Pro**: Requirements parsing (slower, more accurate)
-- **Gemini 1.5 Flash**: Chat interface (faster, cheaper)
+- **Gemini 3 (Flash)**: Requirements parsing, PDF brief extraction, chat interpretation, and AI summary
 - **OR-Tools CP-SAT**: Constraint programming solver
 
 ## 🎓 Example Use Cases
@@ -293,7 +304,7 @@ This is an educational project demonstrating Neuro-Symbolic AI architecture.
 
 ## 🙏 Credits
 
-- **Google Gemini**: AI reasoning and parsing
+- **Google Gemini 3 API**: AI reasoning and parsing (see Gemini 3 Integration below)
 - **Google OR-Tools**: Mathematical optimization
 - **Streamlit**: Rapid UI development
 - **NetworkX**: Graph algorithms for dependency validation
